@@ -1,15 +1,18 @@
 use std::env;
 
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
-use async_graphql::{EmptyMutation, EmptySubscription, Schema};
+use async_graphql::{EmptySubscription, Schema};
 use dotenv::dotenv;
 use poem::web::Html;
 use poem::{handler, route, IntoResponse, Server};
 use sqlx::{migrate::Migrator, postgres::Postgres, Pool};
 
 use query::GraphQL;
-use schema::Query;
+use schema::{MutationRoot, QueryRoot};
 
+mod config;
+mod jwt;
+mod models;
 mod query;
 mod schema;
 
@@ -28,9 +31,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let pool = Pool::<Postgres>::connect(&database_url).await?;
     MIGRATOR.run(&pool).await?;
 
-    let schema = Schema::build(Query, EmptyMutation, EmptySubscription).finish();
+    let schema = Schema::build(QueryRoot, MutationRoot, EmptySubscription)
+        .data(pool)
+        .finish();
 
     let mut app = route();
+
     app.at("/")
         .get(graphql_playground)
         .post(GraphQL::new(schema));
