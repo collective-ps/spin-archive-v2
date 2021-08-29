@@ -6,10 +6,15 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+jwt-simple = "0.10"
 poem = "0.4.1"
 async-graphql = "2.9.12"
 async-graphql-poem = "2.9.12"
-sqlx = { version = "0.5", features = ["runtime-tokio-rustls", "postgres", "migrate"] }
+sqlx = { version = "0.5", features = ["runtime-tokio-rustls", "postgres", "migrate", "chrono"] }
 tokio = { version = "1.8", features = ["macros", "rt-multi-thread"] }
 tokio-util = "0.6.7"
+rust-argon2 = "0.8.3"
 dotenv = "0.15.0"
+nanoid = "0.4.0"
+chrono = "0.4"
+anyhow = "1.0.43"

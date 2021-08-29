@@ -1,17 +1,5 @@
-use async_graphql::*;
+mod mutation;
+mod query;
 
-#[derive(SimpleObject)]
-struct User {
-    username: String,
-}
-
-pub struct Query;
-
-#[Object]
-impl Query {
-    async fn current_user(&self) -> User {
-        User {
-            username: "Test".to_string(),
-        }
-    }
-}
+pub use mutation::MutationRoot;
+pub use query::QueryRoot;
